@@ -15,18 +15,31 @@ a {
 }
 
 .header {
+  max-width: 1200px;
+  margin: 0 auto;
   background-color: #ffffff; 
-  height: 60px; 
+  padding: 0 20px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
+  
+}
+
+.header__logo {
+  background-image: url('../../../public/assets/Logo.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 60px;
+  margin: 20px 0;
 }
 
 .container {
   max-width: 1200px;
   margin: 60px auto;
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 

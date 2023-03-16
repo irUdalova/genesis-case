@@ -1,11 +1,17 @@
 import { getCourses } from 'api/courses';
+import { Course } from 'components/course/course';
 import { Loader } from 'components/loader/Loader';
+import { Pagination } from 'components/pagination/Pagination';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ICourse, IStateCourses } from 'types';
 import './mainPage.scss';
 
 export function MainPage() {
+  const [queryParams, setQueryParams] = useSearchParams();
+  const navigate = useNavigate();
+  const pageQuery = Number(queryParams.get('page'));
+
   const initialState = {
     courses: [] as ICourse[],
     isError: false,
@@ -16,6 +22,7 @@ export function MainPage() {
     },
   };
   const [state, setState] = useState<IStateCourses>(initialState);
+
   useEffect(() => {
     setState((currentState: IStateCourses) => ({
       ...currentState,
@@ -25,11 +32,17 @@ export function MainPage() {
 
     getCourses()
       .then((data) => {
+        console.log('datacourses', data);
+
         setState((currentState: IStateCourses) => ({
           ...currentState,
           courses: data.courses,
           isLoading: false,
           isError: false,
+          pagination: {
+            ...currentState.pagination,
+            totalPages: Math.ceil(data.courses.length / 10),
+          },
         }));
       })
       .catch(() => {
@@ -40,19 +53,45 @@ export function MainPage() {
         }));
       });
   }, []);
+
+  useEffect(() => {
+    setState((currentState: IStateCourses) => ({
+      ...currentState,
+      pagination: {
+        ...currentState.pagination,
+        currentPage: pageQuery,
+      },
+    }));
+  }, [pageQuery]);
+
+  const ITEMS_PER_PAGE = 10;
+  const startItem = (state.pagination.currentPage - 1) * ITEMS_PER_PAGE;
+  const endItem = startItem + ITEMS_PER_PAGE;
+
   return (
     <>
       {state.isLoading && <Loader />}
       {state.isError && <div className="error">Something went wrong, please try again!</div>}
-      <h1>Main page</h1>
+      {state.courses.slice(startItem, endItem).map((course: ICourse) => (
+        <Course
+          key={`${course.id}`}
+          course={course}
+          onCourseClick={() => {
+            navigate(`/${course.id}`);
+          }}
+        />
+      ))}
 
-      <ul>
-        {state.courses.map((course) => (
-          <Link key={course.id} to={`/${course.id}`}>
-            <li>{course.title}</li>
-          </Link>
-        ))}
-      </ul>
+      {!!state.courses.length && (
+        <Pagination
+          totalPages={state.pagination.totalPages}
+          currentPage={state.pagination.currentPage}
+          onPageClick={(num: number) => {
+            setQueryParams({ ...Object.fromEntries(queryParams.entries()), page: num.toString() });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
+      )}
     </>
   );
 }
