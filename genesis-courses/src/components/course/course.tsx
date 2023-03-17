@@ -8,7 +8,8 @@ type TCourseParam = {
 };
 
 export function Course({ course, onCourseClick }: TCourseParam) {
-  const { title, tags, previewImageLink, lessonsCount, description, rating } = course;
+  const { title, previewImageLink, lessonsCount, description, rating } = course;
+
   return (
     <>
       <div className="course" onClick={onCourseClick}>
@@ -21,7 +22,7 @@ export function Course({ course, onCourseClick }: TCourseParam) {
             // height="100"
           />
         </div>
-        <div className="course__description">
+        <div className="course__explanation">
           <h2 className="course__title">{title}</h2>
           <p>{description}</p>
           <p>

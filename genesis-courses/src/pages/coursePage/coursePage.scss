@@ -1,0 +1,40 @@
+.course__video {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: solid 2px #f6f6f6;;
+}
+
+.course__img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.course__description {
+  margin: 0;
+  padding: 0;
+}
+
+.course__title {
+  margin: 0;
+  padding: 0;
+}
+
+.back {
+  background-color: #f6f6f6;
+  width: 150px;
+  height: 30px;
+  color: black;
+  border-radius: 5px;
+  margin: 0;
+  font-weight: 200;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.back:hover {
+  color: white;
+  background-color: #228be6;
+}
