@@ -64,7 +64,8 @@ export interface IStateCourses {
 }
 
 export interface IStateCourse {
-  courseData: ICourseIDResp;
+  courseData: ICourseIDResp | null;
+  activeLessonId: string;
   isLoading: boolean;
   isError: boolean;
 }

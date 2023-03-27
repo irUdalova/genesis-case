@@ -4,16 +4,26 @@
   gap: 10px;
   border-radius: 10px;
   background-color: #f6f6f6;
-  transform: scale(1);
-  transition: 0.3s;
-  cursor: pointer;
+ 
 
-  &_locked {
+  &--locked {
+    position: relative;
     background-color: transparent;
-    border: solid 1px #f6f6f6;
+    border: solid 2px #f6f6f6;
   }
 
-  &:hover {
+  &--active {
+    background-color: #228be6;
+    color: white;
+  }
+
+  &--unlocked {
+    transform: scale(1);
+    transition: 0.3s;
+    cursor: pointer;
+  }
+
+  &--unlocked:hover {
     transform: scale(1.01);
     -webkit-box-shadow: 0px 2px 8px 1px rgba(194,194,194,0.45);
     -moz-box-shadow: 0px 2px 8px 1px rgba(194,194,194,0.45);
@@ -26,6 +36,7 @@
   }
 
   &__preview {
+    min-width: 200px;
     height: 100%;
     border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
@@ -49,6 +60,17 @@
 
   &__title {
     margin: 0;
+  }
+
+  &__status--locked {
+    background-image: url('../../../public/assets/svg/lock.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 33px;
+    position: absolute;
+    right: 30px;
+    top: 10px;
   }
 
 }

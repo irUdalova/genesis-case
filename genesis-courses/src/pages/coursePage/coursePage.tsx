@@ -1,15 +1,17 @@
 import { getCourse } from 'api/course';
 import { Lesson } from 'components/lesson/lesson';
 import { Loader } from 'components/loader/Loader';
-import React, { useEffect, useState } from 'react';
+import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ICourseIDResp, IStateCourse } from 'types';
+import { IStateCourse } from 'types';
 import './coursePage.scss';
+import { VideoPlay } from 'components/video/videoPlay';
 
 export function CoursePage() {
   const initialState = {
-    courseData: {} as ICourseIDResp,
-    isLoading: false,
+    courseData: null,
+    activeLessonId: '',
+    isLoading: true,
     isError: false,
   };
 
@@ -17,9 +19,17 @@ export function CoursePage() {
   const navigate = useNavigate();
   const goBack = () => navigate(-1);
 
-  const [state, setState] = useState(initialState);
+  const videoRef = useRef() as MutableRefObject<HTMLVideoElement>;
+
+  const [state, setState] = useState<IStateCourse>(initialState);
   const { courseData } = state;
   console.log('courseData', courseData);
+
+  const setActiveLesson = (id: string) =>
+    setState((currentState: IStateCourse) => ({
+      ...currentState,
+      activeLessonId: id,
+    }));
 
   useEffect(() => {
     setState((currentState: IStateCourse) => ({
@@ -33,6 +43,7 @@ export function CoursePage() {
           setState((currentState: IStateCourse) => ({
             ...currentState,
             courseData: data,
+            activeLessonId: data.lessons[0].id,
             isLoading: false,
             isError: false,
           }));
@@ -46,8 +57,10 @@ export function CoursePage() {
         });
     }
   }, [id]);
+  const activeLesson = courseData?.lessons.find((lesson) => lesson.id === state.activeLessonId);
+  console.log('activeLesson', activeLesson, courseData, state.activeLessonId);
 
-  if (state.isLoading) return <Loader />;
+  if (state.isLoading || !activeLesson) return <Loader />;
 
   return (
     <>
@@ -55,21 +68,38 @@ export function CoursePage() {
         {`❮ back to courses`}
       </button>
       {state.isError && <div className="error">Something went wrong, please try again!</div>}
-      <h1 className="course__title">{courseData.title}</h1>
-      <p className="course__description">{courseData.description}</p>
+      <h1 className="course__title">{courseData!.title}</h1>
+      <p className="course__description">{courseData!.description}</p>
       <div className="course__video">
-        <img
-          className="course__img"
-          src={`${courseData.previewImageLink}/cover.webp`}
-          alt={courseData.title}
-          // width="auto"
-          // height="100"
-        />
+        {
+          <VideoPlay
+            videoRef={videoRef}
+            src={activeLesson?.link}
+            poster={
+              `${activeLesson.previewImageLink}/lesson-${activeLesson.order}.webp` ||
+              '/assets/img/no-img.webp'
+            }
+          />
+        }
       </div>
-      {!!courseData.lessons &&
-        courseData.lessons.map((lesson) => (
-          <Lesson key={`${lesson.id}`} lesson={lesson} onLessonClick={() => {}} />
-        ))}
+      {
+        <h2 className="lesson__title--active">
+          <span>{`Lesson ${activeLesson.order}: `}</span>
+          {activeLesson.title}
+        </h2>
+      }
+      {courseData!.lessons.map((lesson) => (
+        <Lesson
+          key={`${lesson.id}`}
+          isActive={state.activeLessonId === lesson.id}
+          lesson={lesson}
+          onLessonClick={() => {
+            console.log('lesson.id', lesson.id);
+
+            setActiveLesson(lesson.id);
+          }}
+        />
+      ))}
     </>
   );
 }

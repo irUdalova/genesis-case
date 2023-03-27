@@ -14,13 +14,7 @@ export function Course({ course, onCourseClick }: TCourseParam) {
     <>
       <div className="course" onClick={onCourseClick}>
         <div className="course__preview">
-          <img
-            className="course__img"
-            src={`${previewImageLink}/cover.webp`}
-            alt={title}
-            // width="auto"
-            // height="100"
-          />
+          <img className="course__img" src={`${previewImageLink}/cover.webp`} alt={title} />
         </div>
         <div className="course__explanation">
           <h2 className="course__title">{title}</h2>
