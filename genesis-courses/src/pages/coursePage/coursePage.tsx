@@ -23,7 +23,6 @@ export function CoursePage() {
 
   const [state, setState] = useState<IStateCourse>(initialState);
   const { courseData } = state;
-  console.log('courseData', courseData);
 
   const setActiveLesson = (id: string) =>
     setState((currentState: IStateCourse) => ({
@@ -58,7 +57,6 @@ export function CoursePage() {
     }
   }, [id]);
   const activeLesson = courseData?.lessons.find((lesson) => lesson.id === state.activeLessonId);
-  console.log('activeLesson', activeLesson, courseData, state.activeLessonId);
 
   if (state.isLoading || !activeLesson) return <Loader />;
 
@@ -94,8 +92,6 @@ export function CoursePage() {
           isActive={state.activeLessonId === lesson.id}
           lesson={lesson}
           onLessonClick={() => {
-            console.log('lesson.id', lesson.id);
-
             setActiveLesson(lesson.id);
           }}
         />

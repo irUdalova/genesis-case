@@ -32,8 +32,6 @@ export function MainPage() {
 
     getCourses()
       .then((data) => {
-        console.log('datacourses', data);
-
         setState((currentState: IStateCourses) => ({
           ...currentState,
           courses: data.courses,
@@ -59,7 +57,7 @@ export function MainPage() {
       ...currentState,
       pagination: {
         ...currentState.pagination,
-        currentPage: pageQuery,
+        currentPage: pageQuery || 1,
       },
     }));
   }, [pageQuery]);

@@ -13,14 +13,6 @@ export function VideoPlay({ videoRef, src, poster }: TVideoParams) {
     if (videoRef.current && src) {
       if (Hls.isSupported()) {
         const hls = new Hls();
-
-        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-          console.log('video and hls.js are now bound together !');
-        });
-        hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
-          console.log('manifest loaded, found ' + data.levels.length + ' quality level');
-        });
-
         hls.loadSource(src);
         hls.attachMedia(videoRef.current);
       }
